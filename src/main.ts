@@ -7,24 +7,15 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
+import { originAuth } from './utils/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const whitelist = ['http://localhost:5173'];
   app.use(
     cors({
       credentials: true,
-      origin: (requestOrigin, callback) => {
-        console.log(`requestOrigin is ${requestOrigin}`);
-        if (
-          whitelist.includes(requestOrigin) ||
-          typeof requestOrigin === 'undefined'
-        ) {
-          return callback(null, true);
-        }
-        callback(new Error('Not allowed by CORS'));
-      }
+      origin: originAuth
     })
   );
 

@@ -23,16 +23,16 @@ export class UserService {
     return this.userRepository.find({ skip: offset, take: limit });
   }
 
-  async findOne(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
+  async findOne(userId: string) {
+    const user = await this.userRepository.findOneBy({ userId });
     //   findOne({where:{id:Number(id)},relation:['flavors']})
     if (!user) {
-      throw new NotFoundException(`User #${id} not found`);
+      throw new NotFoundException(`User #${userId} not found`);
     }
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.preload({
       id: +id,
       ...updateUserDto
@@ -43,7 +43,7 @@ export class UserService {
     this.userRepository.save(user);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const user = await this.findOne(id);
     return this.userRepository.remove(user);
   }

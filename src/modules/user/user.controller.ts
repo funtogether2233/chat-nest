@@ -41,19 +41,19 @@ export class UserController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
-    return this.userService.findOne(+id);
+  findOne(@Param('userId', ParseIntPipe) userId: string) {
+    return this.userService.findOne(userId);
   }
 
   @Public()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Public()
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

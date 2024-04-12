@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserService } from '../users/user.service';
+import { UserService } from '../user/user.service';
 import { CreateUserAuthDto } from './dto/create-user-auth.dto';
 import { UserAuth } from './entities/user-auth.entity';
 
@@ -18,11 +18,14 @@ export class UserAuthService {
   ) {}
 
   async create(createUserAuthDto: CreateUserAuthDto) {
-    const userAuth = this.userAuthRepository.create(createUserAuthDto);
-    const userAuthInfo = await this.findOne(createUserAuthDto.userId);
-    if (userAuthInfo) {
+    const user = await this.userAuthRepository.findOneBy({
+      userId: createUserAuthDto.userId
+    });
+
+    if (user) {
       throw new UnauthorizedException(`帐号已存在`);
     }
+    const userAuth = this.userAuthRepository.create(createUserAuthDto);
     this.userService.create({
       userId: createUserAuthDto.userId,
       nickName: '默认新用户'
@@ -46,25 +49,4 @@ export class UserAuthService {
     }
     return user;
   }
-
-  //   findAll(paginationQuery: PaginationQueryDto) {
-  //     const { limit, offset } = paginationQuery;
-  //     return this.userAuthRepository.find({ skip: offset, take: limit });
-  //   }
-
-  //   async update(id: number, updateUserDto: UpdateUserAuthDto) {
-  //     const user = await this.userAuthRepository.preload({
-  //       id: +id,
-  //       ...updateUserDto
-  //     });
-  //     if (!user) {
-  //       throw new NotFoundException(`User #${id} not found`);
-  //     }
-  //     this.userAuthRepository.save(user);
-  //   }
-
-  //   async remove(id: number) {
-  //     const user = await this.findOne(id);
-  //     return this.userAuthRepository.remove(user);
-  //   }
 }

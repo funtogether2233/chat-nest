@@ -5,8 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule } from './common/common.module';
+import { CollaDocModule } from './modules/colla-doc/colla-doc.module';
+import { FriendshipModule } from './modules/friendship/friendship.module';
+import { GroupMemberModule } from './modules/group-member/group-member.module';
+import { GroupMessageModule } from './modules/group-message/group-message.module';
+import { GroupModule } from './modules/group/group.module';
+import { RelationMessageModule } from './modules/relation-message/relation-message.module';
 import { UserAuthModule } from './modules/user-auth/user-auth.module';
-import { UserModule } from './modules/users/user.module';
+import { UserMessageModule } from './modules/user-message/user-message.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -29,9 +36,16 @@ import { UserModule } from './modules/users/user.module';
       retryDelay: 500, // 重试连接数据库间隔
       retryAttempts: 10 // 重试连接数据库的次数
     }),
+    CommonModule,
     UserModule,
     UserAuthModule,
-    CommonModule
+    FriendshipModule,
+    UserMessageModule,
+    GroupModule,
+    GroupMemberModule,
+    GroupMessageModule,
+    RelationMessageModule,
+    CollaDocModule
   ],
   controllers: [AppController],
   providers: [AppService]
