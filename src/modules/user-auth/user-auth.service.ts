@@ -28,7 +28,8 @@ export class UserAuthService {
     const userAuth = this.userAuthRepository.create(createUserAuthDto);
     this.userService.create({
       userId: createUserAuthDto.userId,
-      nickName: '默认新用户'
+      userName: '默认新用户',
+      userIntroduction: '介绍一下你自己吧~'
     });
     this.userAuthRepository.save(userAuth);
     return { success: true };

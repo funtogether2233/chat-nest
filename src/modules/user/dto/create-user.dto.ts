@@ -7,5 +7,8 @@ export class CreateUserDto {
   readonly userId: string;
 
   @IsString()
-  readonly nickName: string;
+  readonly userName: string;
+
+  @IsString()
+  readonly userIntroduction: string;
 }

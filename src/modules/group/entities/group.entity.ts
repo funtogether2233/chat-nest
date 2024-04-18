@@ -10,4 +10,7 @@ export class Group {
 
   @Column({ name: 'group_name', default: '群组' })
   groupName: string;
+
+  @Column({ name: 'group_introduction', default: '介绍一下群聊吧~' })
+  groupIntroduction: string;
 }

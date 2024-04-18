@@ -10,4 +10,7 @@ export class User {
 
   @Column({ name: 'user_name', default: '用户' })
   userName: string;
+
+  @Column({ name: 'user_introduction', default: '介绍一下你自己吧~' })
+  userIntroduction: string;
 }

@@ -13,6 +13,23 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) {}
 
+  async getUserInfo(userId: string) {
+    const user = await this.findOne(userId);
+    return user;
+  }
+
+  async updateUserInfo(updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(updateUserDto.userId);
+    const newUser = await this.userRepository.preload({
+      id: user.id,
+      ...updateUserDto
+    });
+    if (!newUser) {
+      throw new NotFoundException(`User #${user.userId} not found`);
+    }
+    this.userRepository.save(newUser);
+  }
+
   async getFriendList(userId: string) {
     const friendshipList = await this.findAllFriend(userId);
     return {

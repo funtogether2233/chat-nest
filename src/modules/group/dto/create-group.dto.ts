@@ -6,4 +6,7 @@ export class CreateGroupDto {
 
   @IsString()
   readonly groupName: string;
+
+  @IsString()
+  readonly groupIntroduction: string;
 }

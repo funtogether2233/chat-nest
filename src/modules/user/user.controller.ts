@@ -29,6 +29,18 @@ export class UserController {
   }
 
   @Public()
+  @Post('get-user-info')
+  getUserInfo(@Body() { userId }: { userId: string }) {
+    return this.userService.getUserInfo(userId);
+  }
+
+  @Public()
+  @Post('update-user-info')
+  updateUserInfo(@Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateUserInfo(updateUserDto);
+  }
+
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

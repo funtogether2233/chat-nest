@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GroupMemberService } from '../group-member/group-member.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 import { Group } from './entities/group.entity';
 
 @Injectable()
@@ -19,6 +20,23 @@ export class GroupService {
     @Inject(forwardRef(() => GroupMemberService))
     private readonly groupMemberService: GroupMemberService
   ) {}
+
+  async getGroupInfo({ groupId }: { groupId: string }) {
+    const group = await this.findOne(groupId);
+    return group;
+  }
+
+  async updateGroupInfo(updateGroupDto: UpdateGroupDto) {
+    const group = await this.findOne(updateGroupDto.groupId);
+    const newGroup = await this.groupRepository.preload({
+      id: group.id,
+      ...updateGroupDto
+    });
+    if (!newGroup) {
+      throw new NotFoundException(`group #${updateGroupDto.groupId} not found`);
+    }
+    this.groupRepository.save(newGroup);
+  }
 
   async searchGroupList(groupId: string) {
     const groupList = await this.findAll(groupId);
@@ -48,7 +66,11 @@ export class GroupService {
     groupId: string;
     groupName: string;
   }) {
-    await this.create({ groupId, groupName });
+    await this.create({
+      groupId,
+      groupName,
+      groupIntroduction: '介绍一下群聊吧~'
+    });
     this.groupMemberService.addGroup({ userId, groupId });
     console.log('结束');
     return { success: true };
