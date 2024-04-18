@@ -9,7 +9,7 @@ export class FriendshipController {
   @Public()
   @Post('get-friendship-list')
   getFriendshipList(@Body() { userId }: { userId: string }) {
-    return this.friendshipService.getFriendshipList(userId);
+    return this.friendshipService.getFriendshipList({ userId });
   }
 
   @Public()
@@ -17,6 +17,14 @@ export class FriendshipController {
   addFriendship(
     @Body() { userId, friendId }: { userId: string; friendId: string }
   ) {
-    return this.friendshipService.addFriendship(userId, friendId);
+    return this.friendshipService.addFriendship({ userId, friendId });
+  }
+
+  @Public()
+  @Post('delete-friendship')
+  deleteFriendship(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.deleteFriendship({ userId, friendId });
   }
 }

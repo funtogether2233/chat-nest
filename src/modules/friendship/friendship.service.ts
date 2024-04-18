@@ -13,12 +13,12 @@ export class FriendshipService {
     private readonly userService: UserService
   ) {}
 
-  async getFriendshipList(userId: string) {
+  async getFriendshipList({ userId }: { userId: string }) {
     const friendshipListRes = await this.findAll(userId);
     const friendshipList = await Promise.all(
       friendshipListRes.map(async (friendshipInfo) => {
         const userId = friendshipInfo.friendId;
-        const userDetailInfo = await this.userService.findOne(userId);
+        const userDetailInfo = await this.userService.findOne({ userId });
         return { userId: userId, userName: userDetailInfo.userName };
       })
     );
@@ -36,9 +36,15 @@ export class FriendshipService {
     };
   }
 
-  addFriendship(userId: string, friendId: string) {
+  addFriendship({ userId, friendId }: { userId: string; friendId: string }) {
     this.create({ userId, friendId });
     this.create({ userId: friendId, friendId: userId });
+    return { success: true };
+  }
+
+  deleteFriendship({ userId, friendId }: { userId: string; friendId: string }) {
+    this.remove({ userId, friendId });
+    this.remove({ userId: friendId, friendId: userId });
     return { success: true };
   }
 
@@ -47,10 +53,26 @@ export class FriendshipService {
     return this.friendshipRepository.save(friendship);
   }
 
+  async remove({ userId, friendId }: { userId: string; friendId: string }) {
+    const friendship = await this.findOne({ userId, friendId });
+    return this.friendshipRepository.remove(friendship);
+  }
+
   async findAll(userId: string) {
     const friendship = this.friendshipRepository.findBy({ userId });
     if (!friendship) {
       throw new NotFoundException(`User #${userId}'s friendship not found`);
+    }
+    return friendship;
+  }
+
+  async findOne({ userId, friendId }: { userId: string; friendId: string }) {
+    const friendship = await this.friendshipRepository.findOneBy({
+      userId,
+      friendId
+    });
+    if (!friendship) {
+      throw new NotFoundException(`User #${friendId} not found`);
     }
     return friendship;
   }

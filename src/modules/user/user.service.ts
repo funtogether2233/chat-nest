@@ -14,12 +14,12 @@ export class UserService {
   ) {}
 
   async getUserInfo(userId: string) {
-    const user = await this.findOne(userId);
+    const user = await this.findOne({ userId });
     return user;
   }
 
   async updateUserInfo(updateUserDto: UpdateUserDto) {
-    const user = await this.findOne(updateUserDto.userId);
+    const user = await this.findOne({ userId: updateUserDto.userId });
     const newUser = await this.userRepository.preload({
       id: user.id,
       ...updateUserDto
@@ -70,7 +70,7 @@ export class UserService {
     return this.userRepository.find({ skip: offset, take: limit });
   }
 
-  async findOne(userId: string) {
+  async findOne({ userId }: { userId: string }) {
     const user = await this.userRepository.findOneBy({ userId });
     //   findOne({where:{id:Number(id)},relation:['flavors']})
     if (!user) {
@@ -91,7 +91,7 @@ export class UserService {
   }
 
   async remove(id: string) {
-    const user = await this.findOne(id);
+    const user = await this.findOne({ userId: id });
     return this.userRepository.remove(user);
   }
 }

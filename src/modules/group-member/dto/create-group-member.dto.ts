@@ -6,4 +6,7 @@ export class CreateGroupMemberDto {
 
   @IsString()
   userId: string;
+
+  @IsString()
+  userStatus: string;
 }

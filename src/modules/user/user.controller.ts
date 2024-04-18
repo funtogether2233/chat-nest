@@ -60,7 +60,7 @@ export class UserController {
   @Public()
   @Get(':id')
   findOne(@Param('userId', ParseIntPipe) userId: string) {
-    return this.userService.findOne(userId);
+    return this.userService.findOne({ userId });
   }
 
   @Public()

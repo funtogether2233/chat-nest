@@ -10,4 +10,7 @@ export class GroupMember {
 
   @Column({ name: 'user_id' })
   userId: string;
+
+  @Column({ name: 'user_status', default: '0' })
+  userStatus: string;
 }

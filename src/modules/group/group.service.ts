@@ -22,12 +22,12 @@ export class GroupService {
   ) {}
 
   async getGroupInfo({ groupId }: { groupId: string }) {
-    const group = await this.findOne(groupId);
+    const group = await this.findOne({ groupId });
     return group;
   }
 
   async updateGroupInfo(updateGroupDto: UpdateGroupDto) {
-    const group = await this.findOne(updateGroupDto.groupId);
+    const group = await this.findOne({ groupId: updateGroupDto.groupId });
     const newGroup = await this.groupRepository.preload({
       id: group.id,
       ...updateGroupDto
@@ -95,7 +95,7 @@ export class GroupService {
     return groupList;
   }
 
-  async findOne(groupId: string) {
+  async findOne({ groupId }: { groupId: string }) {
     const group = await this.groupRepository.findOneBy({ groupId });
     if (!group) {
       throw new NotFoundException(`group #${groupId} not found`);
