@@ -23,6 +23,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Public()
+  @Post('search-friend-list')
+  searchFriendList(@Body() { userId }: { userId: string }) {
+    return this.userService.getFriendList(userId);
+  }
+
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

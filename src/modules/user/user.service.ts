@@ -13,6 +13,36 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) {}
 
+  async getFriendList(userId: string) {
+    const friendshipList = await this.findAllFriend(userId);
+    return {
+      friendshipList: friendshipList
+        .map((friendshipInfo) => {
+          return {
+            userId: friendshipInfo.userId,
+            userName: friendshipInfo.userName
+          };
+        })
+        .sort((a, b) => {
+          if (a.userName < b.userName) {
+            return -1;
+          }
+          if (a.userName > b.userName) {
+            return 1;
+          }
+          return 0;
+        })
+    };
+  }
+
+  async findAllFriend(userId: string) {
+    const friendshipList = this.userRepository.findBy({ userId });
+    if (!friendshipList) {
+      throw new NotFoundException(`User #${userId}'s group not found`);
+    }
+    return friendshipList;
+  }
+
   create(createUserDto: CreateUserDto) {
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);

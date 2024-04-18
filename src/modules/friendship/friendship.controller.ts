@@ -11,4 +11,12 @@ export class FriendshipController {
   getFriendshipList(@Body() { userId }: { userId: string }) {
     return this.friendshipService.getFriendshipList(userId);
   }
+
+  @Public()
+  @Post('add-friendship')
+  addFriendship(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.addFriendship(userId, friendId);
+  }
 }

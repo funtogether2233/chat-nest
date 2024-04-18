@@ -8,6 +8,6 @@ export class User {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @Column({ name: 'nick_name', default: '用户' })
-  nickName: string;
+  @Column({ name: 'user_name', default: '用户' })
+  userName: string;
 }

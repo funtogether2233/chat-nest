@@ -11,4 +11,10 @@ export class GroupMemberController {
   getGroupList(@Body() { userId }: { userId: string }) {
     return this.groupMemberService.getGroupList(userId);
   }
+
+  @Public()
+  @Post('add-group')
+  addGroup(@Body() { userId, groupId }: { userId: string; groupId: string }) {
+    return this.groupMemberService.addGroup(userId, groupId);
+  }
 }
