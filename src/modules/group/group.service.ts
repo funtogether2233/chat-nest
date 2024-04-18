@@ -1,13 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+  forwardRef
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { GroupMemberService } from '../group-member/group-member.service';
+import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from './entities/group.entity';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>
+    private readonly groupRepository: Repository<Group>,
+    @Inject(forwardRef(() => GroupMemberService))
+    private readonly groupMemberService: GroupMemberService
   ) {}
 
   async searchGroupList(groupId: string) {
@@ -29,9 +39,35 @@ export class GroupService {
     };
   }
 
+  async setUpNewGroup({
+    userId,
+    groupId,
+    groupName
+  }: {
+    userId: string;
+    groupId: string;
+    groupName: string;
+  }) {
+    await this.create({ groupId, groupName });
+    this.groupMemberService.addGroup({ userId, groupId });
+    console.log('结束');
+    return { success: true };
+  }
+
+  async create(createGroupDto: CreateGroupDto) {
+    const group = await this.groupRepository.findOneBy({
+      groupId: createGroupDto.groupId
+    });
+    if (group) {
+      throw new UnauthorizedException(`帐号已存在`);
+    }
+    const newGroup = this.groupRepository.create(createGroupDto);
+    return this.groupRepository.save(newGroup);
+  }
+
   async findAll(groupId: string) {
-    const groupList = this.groupRepository.findBy({ groupId });
-    if (!groupList) {
+    const groupList = await this.groupRepository.findBy({ groupId });
+    if (groupList.length === 0) {
       throw new NotFoundException(`group #${groupId} not found`);
     }
     return groupList;

@@ -36,9 +36,9 @@ export class UserService {
   }
 
   async findAllFriend(userId: string) {
-    const friendshipList = this.userRepository.findBy({ userId });
-    if (!friendshipList) {
-      throw new NotFoundException(`User #${userId}'s group not found`);
+    const friendshipList = await this.userRepository.findBy({ userId });
+    if (friendshipList.length === 0) {
+      throw new NotFoundException(`User #${userId} not found`);
     }
     return friendshipList;
   }

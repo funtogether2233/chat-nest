@@ -11,4 +11,21 @@ export class GroupController {
   searchGroupList(@Body() { groupId }: { groupId: string }) {
     return this.groupService.searchGroupList(groupId);
   }
+
+  @Public()
+  @Post('set-up-new-group')
+  setUpNewGroup(
+    @Body()
+    {
+      userId,
+      groupId,
+      groupName
+    }: {
+      userId: string;
+      groupId: string;
+      groupName: string;
+    }
+  ) {
+    return this.groupService.setUpNewGroup({ userId, groupId, groupName });
+  }
 }

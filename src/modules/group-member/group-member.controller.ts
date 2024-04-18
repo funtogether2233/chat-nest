@@ -15,6 +15,6 @@ export class GroupMemberController {
   @Public()
   @Post('add-group')
   addGroup(@Body() { userId, groupId }: { userId: string; groupId: string }) {
-    return this.groupMemberService.addGroup(userId, groupId);
+    return this.groupMemberService.addGroup({ userId, groupId });
   }
 }

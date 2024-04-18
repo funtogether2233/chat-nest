@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GroupService } from '../group/group.service';
@@ -10,6 +15,7 @@ export class GroupMemberService {
   constructor(
     @InjectRepository(GroupMember)
     private readonly groupMemberRepository: Repository<GroupMember>,
+    @Inject(forwardRef(() => GroupService))
     private readonly groupService: GroupService
   ) {}
 
@@ -36,7 +42,7 @@ export class GroupMemberService {
     };
   }
 
-  addGroup(userId: string, groupId: string) {
+  addGroup({ userId, groupId }: { userId: string; groupId: string }) {
     this.create({ userId, groupId });
     return { success: true };
   }
