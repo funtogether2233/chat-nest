@@ -57,14 +57,26 @@ export class GroupMessageGateway
   }
 
   @SubscribeMessage('group-message')
-  handleGroupMessage(
+  async handleGroupMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() body: any
   ) {
-    console.log(body);
-    const { fromId, toId, msg, time } = body;
+    const { fromId, toId, msg } = body;
     console.log(`user ${fromId} to group ${toId} : ${msg}`);
+    const newMessage = await this.groupMessageService.saveUserMessage({
+      fromId,
+      toId,
+      msg
+    });
+    const { fromUserInfo } = await this.groupMessageService.getFromUserInfo({
+      fromId
+    });
     const roomId = toId;
-    this.server.to(roomId).emit('group-message', { fromId, toId, msg, time });
+    this.server.to(roomId).emit('group-message', {
+      fromUserInfo,
+      toId,
+      msg,
+      createdTime: newMessage.createdTime
+    });
   }
 }
