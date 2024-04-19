@@ -29,7 +29,7 @@ export class GroupMemberService {
       groupListRes.map(async (groupInfo) => {
         const groupId = groupInfo.groupId;
         const groupDetailInfo = await this.groupService.findOne({ groupId });
-        return { groupId, groupName: groupDetailInfo.groupName };
+        return { ...groupDetailInfo };
       })
     );
     groupList.sort((a, b) => {

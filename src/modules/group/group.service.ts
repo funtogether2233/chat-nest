@@ -84,7 +84,8 @@ export class GroupService {
     await this.create({
       groupId,
       groupName,
-      groupIntroduction: '介绍一下群聊吧~'
+      groupIntroduction: '介绍一下群聊吧~',
+      avatarImg: 'https://img2.imgtp.com/2024/04/20/I2HmK2PR.png'
     });
     this.groupMemberService.addGroup({ userId, groupId });
     console.log('结束');

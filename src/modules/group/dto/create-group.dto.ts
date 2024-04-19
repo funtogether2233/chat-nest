@@ -9,4 +9,7 @@ export class CreateGroupDto {
 
   @IsString()
   readonly groupIntroduction: string;
+
+  @IsString()
+  readonly avatarImg: string;
 }

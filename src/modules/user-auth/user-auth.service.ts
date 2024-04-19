@@ -29,7 +29,8 @@ export class UserAuthService {
     this.userService.create({
       userId: createUserAuthDto.userId,
       userName: '默认新用户',
-      userIntroduction: '介绍一下你自己吧~'
+      userIntroduction: '介绍一下你自己吧~',
+      avatarImg: 'https://img2.imgtp.com/2024/04/19/gj74JzoO.jpg'
     });
     this.userAuthRepository.save(userAuth);
     return { success: true };

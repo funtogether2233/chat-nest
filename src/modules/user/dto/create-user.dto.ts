@@ -11,4 +11,7 @@ export class CreateUserDto {
 
   @IsString()
   readonly userIntroduction: string;
+
+  @IsString()
+  readonly avatarImg: string;
 }

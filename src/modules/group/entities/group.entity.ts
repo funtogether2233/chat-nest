@@ -13,4 +13,10 @@ export class Group {
 
   @Column({ name: 'group_introduction', default: '介绍一下群聊吧~' })
   groupIntroduction: string;
+
+  @Column({
+    name: 'avatar_img',
+    default: 'https://img2.imgtp.com/2024/04/20/I2HmK2PR.png'
+  })
+  avatarImg: string;
 }

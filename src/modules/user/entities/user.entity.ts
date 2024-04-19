@@ -13,4 +13,10 @@ export class User {
 
   @Column({ name: 'user_introduction', default: '介绍一下你自己吧~' })
   userIntroduction: string;
+
+  @Column({
+    name: 'avatar_img',
+    default: 'https://img2.imgtp.com/2024/04/19/gj74JzoO.jpg'
+  })
+  avatarImg: string;
 }
