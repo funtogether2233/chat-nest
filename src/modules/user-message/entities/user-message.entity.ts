@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn
+} from 'typeorm';
 
 @Entity({ name: 'user_message' })
 export class UserMessage {
@@ -14,6 +19,6 @@ export class UserMessage {
   @Column()
   msg: string;
 
-  @Column()
-  time: number;
+  @CreateDateColumn()
+  createdTime: Date;
 }

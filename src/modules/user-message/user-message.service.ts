@@ -29,17 +29,17 @@ export class UserMessageService {
         });
         return {
           fromUserInfo,
-          toId,
+          toId: messageInfo.toId,
           msg: messageInfo.msg,
-          time: messageInfo.time
+          createdTime: messageInfo.createdTime
         };
       })
     );
-    return userMessageList;
+    return { userMessageList };
   }
 
   async saveUserMessage(createUserMessageDto: CreateUserMessageDto) {
-    await this.create(createUserMessageDto);
+    return await this.create(createUserMessageDto);
   }
 
   create(createUserMessageDto: CreateUserMessageDto) {
@@ -57,7 +57,7 @@ export class UserMessageService {
       toId: fromId
     });
     const messageList = [...messageListFrom, ...messageListTo].sort(
-      (a, b) => a.time - b.time
+      (a, b) => Number(a.createdTime) - Number(b.createdTime)
     );
     return messageList;
   }

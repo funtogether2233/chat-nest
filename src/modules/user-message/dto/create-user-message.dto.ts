@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateUserMessageDto {
   @IsString()
@@ -9,7 +9,4 @@ export class CreateUserMessageDto {
 
   @IsString()
   readonly msg: string;
-
-  @IsNumber()
-  readonly time: number;
 }

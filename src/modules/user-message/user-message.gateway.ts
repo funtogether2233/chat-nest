@@ -46,12 +46,21 @@ export class UserMessageGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() body: any
   ) {
-    const { fromId, toId, msg, time } = body;
+    const { fromId, toId, msg } = body;
     console.log(`user ${fromId} to user ${toId} : ${msg}`);
-    this.userMessageService.saveUserMessage({ fromId, toId, msg, time });
+    const newMessage = await this.userMessageService.saveUserMessage({
+      fromId,
+      toId,
+      msg
+    });
     const { fromUserInfo } = await this.userMessageService.getFromUserInfo({
       fromId
     });
-    this.server.emit('user-message', { fromUserInfo, toId, msg, time });
+    this.server.emit('user-message', {
+      fromUserInfo,
+      toId,
+      msg,
+      createdTime: newMessage.createdTime
+    });
   }
 }
