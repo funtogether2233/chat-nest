@@ -13,7 +13,7 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) {}
 
-  async getUserInfo(userId: string) {
+  async getUserInfo({ userId }: { userId: string }) {
     const user = await this.findOne({ userId });
     return user;
   }

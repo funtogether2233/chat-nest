@@ -42,12 +42,16 @@ export class UserMessageGateway
   }
 
   @SubscribeMessage('user-message')
-  handleUserMessage(
+  async handleUserMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() body: any
   ) {
     const { fromId, toId, msg, time } = body;
     console.log(`user ${fromId} to user ${toId} : ${msg}`);
-    this.server.emit('user-message', { fromId, toId, msg, time });
+    this.userMessageService.saveUserMessage({ fromId, toId, msg, time });
+    const { fromUserInfo } = await this.userMessageService.getFromUserInfo({
+      fromId
+    });
+    this.server.emit('user-message', { fromUserInfo, toId, msg, time });
   }
 }

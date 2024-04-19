@@ -31,7 +31,7 @@ export class UserController {
   @Public()
   @Post('get-user-info')
   getUserInfo(@Body() { userId }: { userId: string }) {
-    return this.userService.getUserInfo(userId);
+    return this.userService.getUserInfo({ userId });
   }
 
   @Public()
