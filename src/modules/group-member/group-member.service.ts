@@ -19,6 +19,7 @@ export class GroupMemberService {
     private readonly groupMemberRepository: Repository<GroupMember>,
     @Inject(forwardRef(() => GroupService))
     private readonly groupService: GroupService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService
   ) {}
 
@@ -67,6 +68,18 @@ export class GroupMemberService {
     return {
       groupMemberList
     };
+  }
+
+  async isInGroup({ userId, groupId }: { userId: string; groupId: string }) {
+    const groupMember = await this.groupMemberRepository.findOneBy({
+      userId,
+      groupId
+    });
+    console.log(userId, groupId);
+    if (groupMember) {
+      return true;
+    }
+    return false;
   }
 
   addGroup({ userId, groupId }: { userId: string; groupId: string }) {

@@ -24,8 +24,19 @@ export class UserController {
 
   @Public()
   @Post('search-friend-list')
-  searchFriendList(@Body() { userId }: { userId: string }) {
-    return this.userService.getFriendList(userId);
+  searchFriendList(
+    @Body()
+    {
+      userId,
+      friendId,
+      groupId
+    }: {
+      userId: string;
+      friendId?: string;
+      groupId?: string;
+    }
+  ) {
+    return this.userService.getFriendList({ userId, friendId, groupId });
   }
 
   @Public()

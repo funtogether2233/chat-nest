@@ -10,7 +10,7 @@ import { GroupMemberService } from './group-member.service';
   imports: [
     TypeOrmModule.forFeature([GroupMember]),
     forwardRef(() => GroupModule),
-    UserModule
+    forwardRef(() => UserModule)
   ],
   controllers: [GroupMemberController],
   providers: [GroupMemberService],

@@ -1,7 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
+import { FriendshipService } from '../friendship/friendship.service';
+import { GroupMemberService } from '../group-member/group-member.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,7 +17,11 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => FriendshipService))
+    private readonly friendshipService: FriendshipService,
+    @Inject(forwardRef(() => GroupMemberService))
+    private readonly groupMemberService: GroupMemberService
   ) {}
 
   async getUserInfo({ userId }: { userId: string }) {
@@ -30,30 +41,51 @@ export class UserService {
     this.userRepository.save(newUser);
   }
 
-  async getFriendList(userId: string) {
-    const friendshipList = await this.findAllFriend(userId);
+  async getFriendList({
+    userId,
+    friendId,
+    groupId
+  }: {
+    userId: string;
+    friendId?: string;
+    groupId?: string;
+  }) {
+    const friendshipListRes = await this.findAllFriend(userId);
+    const friendshipList = await Promise.all(
+      friendshipListRes.map(async (friendshipInfo) => {
+        const isFriendship = await this.friendshipService.isFriendship({
+          userId: friendshipInfo.userId,
+          friendId
+        });
+        const isInGroup = await this.groupMemberService.isInGroup({
+          userId: friendshipInfo.userId,
+          groupId
+        });
+        return {
+          userId: friendshipInfo.userId,
+          userName: friendshipInfo.userName,
+          isFriendship,
+          isInGroup
+        };
+      })
+    );
     return {
-      friendshipList: friendshipList
-        .map((friendshipInfo) => {
-          return {
-            userId: friendshipInfo.userId,
-            userName: friendshipInfo.userName
-          };
-        })
-        .sort((a, b) => {
-          if (a.userName < b.userName) {
-            return -1;
-          }
-          if (a.userName > b.userName) {
-            return 1;
-          }
-          return 0;
-        })
+      friendshipList: friendshipList.sort((a, b) => {
+        if (a.userName < b.userName) {
+          return -1;
+        }
+        if (a.userName > b.userName) {
+          return 1;
+        }
+        return 0;
+      })
     };
   }
 
   async findAllFriend(userId: string) {
-    const friendshipList = await this.userRepository.findBy({ userId });
+    const friendshipList = await this.userRepository.findBy({
+      userId: Like(`%${userId}%`)
+    });
     if (friendshipList.length === 0) {
       throw new NotFoundException(`User #${userId} not found`);
     }

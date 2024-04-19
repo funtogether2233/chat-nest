@@ -19,12 +19,6 @@ export class GroupMemberController {
   }
 
   @Public()
-  @Post('add-group')
-  addGroup(@Body() { userId, groupId }: { userId: string; groupId: string }) {
-    return this.groupMemberService.addGroup({ userId, groupId });
-  }
-
-  @Public()
   @Post('get-user-status')
   getUserStatus(
     @Body() { userId, groupId }: { userId: string; groupId: string }
@@ -33,17 +27,27 @@ export class GroupMemberController {
   }
 
   @Public()
-  @Post('add-admin')
-  addAdmin(@Body() { groupId, userId }: { groupId: string; userId: string }) {
-    return this.groupMemberService.addAdmin({ groupId, userId });
+  @Post('add-group')
+  addGroup(@Body() { userId, groupId }: { userId: string; groupId: string }) {
+    return this.groupMemberService.addGroup({ userId, groupId });
   }
 
   @Public()
-  @Post('delete-admin')
-  deleteAdmin(
-    @Body() { groupId, userId }: { groupId: string; userId: string }
+  @Post('add-Group-member')
+  addGroupMember(
+    @Body()
+    { groupId, userId }: { groupId: string; userId: string }
   ) {
-    return this.groupMemberService.deleteAdmin({ groupId, userId });
+    return this.groupMemberService.addGroupMember({ groupId, userId });
+  }
+
+  @Public()
+  @Post('exit-group')
+  exitGroup(
+    @Body()
+    { groupId, userId }: { groupId: string; userId: string }
+  ) {
+    return this.groupMemberService.exitGroup({ groupId, userId });
   }
 
   @Public()
@@ -64,20 +68,16 @@ export class GroupMemberController {
   }
 
   @Public()
-  @Post('exit-group')
-  exitGroup(
-    @Body()
-    { groupId, userId }: { groupId: string; userId: string }
-  ) {
-    return this.groupMemberService.exitGroup({ groupId, userId });
+  @Post('add-admin')
+  addAdmin(@Body() { groupId, userId }: { groupId: string; userId: string }) {
+    return this.groupMemberService.addAdmin({ groupId, userId });
   }
 
   @Public()
-  @Post('add-Group-member')
-  addGroupMember(
-    @Body()
-    { groupId, userId }: { groupId: string; userId: string }
+  @Post('delete-admin')
+  deleteAdmin(
+    @Body() { groupId, userId }: { groupId: string; userId: string }
   ) {
-    return this.groupMemberService.addGroupMember({ groupId, userId });
+    return this.groupMemberService.deleteAdmin({ groupId, userId });
   }
 }

@@ -9,8 +9,10 @@ export class GroupController {
 
   @Public()
   @Post('search-group-list')
-  searchGroupList(@Body() { groupId }: { groupId: string }) {
-    return this.groupService.searchGroupList(groupId);
+  searchGroupList(
+    @Body() { groupId, userId }: { groupId: string; userId: string }
+  ) {
+    return this.groupService.searchGroupList({ groupId, userId });
   }
 
   @Public()

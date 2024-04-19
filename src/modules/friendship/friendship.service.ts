@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
@@ -10,6 +15,7 @@ export class FriendshipService {
   constructor(
     @InjectRepository(Friendship)
     private readonly friendshipRepository: Repository<Friendship>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService
   ) {}
 
@@ -46,6 +52,24 @@ export class FriendshipService {
     this.remove({ userId, friendId });
     this.remove({ userId: friendId, friendId: userId });
     return { success: true };
+  }
+
+  async isFriendship({
+    userId,
+    friendId
+  }: {
+    userId: string;
+    friendId: string;
+  }) {
+    const friendship = await this.friendshipRepository.findOneBy({
+      userId,
+      friendId
+    });
+    console.log('friendship', friendship);
+    if (friendship) {
+      return true;
+    }
+    return false;
   }
 
   create(createFriendshipDto: CreateFriendshipDto) {

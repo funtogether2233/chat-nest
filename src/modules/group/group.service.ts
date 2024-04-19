@@ -6,7 +6,7 @@ import {
   forwardRef
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { GroupMemberService } from '../group-member/group-member.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -38,22 +38,37 @@ export class GroupService {
     this.groupRepository.save(newGroup);
   }
 
-  async searchGroupList(groupId: string) {
-    const groupList = await this.findAll(groupId);
+  async searchGroupList({
+    groupId,
+    userId
+  }: {
+    groupId: string;
+    userId: string;
+  }) {
+    const groupListRes = await this.findAll(groupId);
+    const groupList = await Promise.all(
+      groupListRes.map(async (groupInfo) => {
+        const isInGroup = await this.groupMemberService.isInGroup({
+          userId,
+          groupId: groupInfo.groupId
+        });
+        return {
+          groupId: groupInfo.groupId,
+          groupName: groupInfo.groupName,
+          isInGroup
+        };
+      })
+    );
     return {
-      groupList: groupList
-        .map((groupInfo) => {
-          return { groupId: groupInfo.groupId, groupName: groupInfo.groupName };
-        })
-        .sort((a, b) => {
-          if (a.groupName < b.groupName) {
-            return -1;
-          }
-          if (a.groupName > b.groupName) {
-            return 1;
-          }
-          return 0;
-        })
+      groupList: groupList.sort((a, b) => {
+        if (a.groupName < b.groupName) {
+          return -1;
+        }
+        if (a.groupName > b.groupName) {
+          return 1;
+        }
+        return 0;
+      })
     };
   }
 
@@ -88,7 +103,9 @@ export class GroupService {
   }
 
   async findAll(groupId: string) {
-    const groupList = await this.groupRepository.findBy({ groupId });
+    const groupList = await this.groupRepository.findBy({
+      groupId: Like(`%${groupId}%`)
+    });
     if (groupList.length === 0) {
       throw new NotFoundException(`group #${groupId} not found`);
     }
