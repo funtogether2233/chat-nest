@@ -19,4 +19,10 @@ export class Group {
     default: 'https://img2.imgtp.com/2024/04/20/I2HmK2PR.png'
   })
   avatarImg: string;
+
+  @Column({
+    name: 'is_disbanded',
+    default: 0
+  })
+  isDisbanded: number;
 }

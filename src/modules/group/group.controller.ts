@@ -43,4 +43,13 @@ export class GroupController {
   updateGroupInfo(@Body() updateGroupDto: UpdateGroupDto) {
     return this.groupService.updateGroupInfo(updateGroupDto);
   }
+
+  @Public()
+  @Post('disband-group')
+  disbandGroup(
+    @Body()
+    { groupId }: { groupId: string }
+  ) {
+    return this.groupService.disbandGroup({ groupId });
+  }
 }

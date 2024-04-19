@@ -42,7 +42,7 @@ export class GroupMemberService {
       return 0;
     });
     return {
-      groupList
+      groupList: groupList.filter((groupInfo) => groupInfo.isDisbanded === 0)
     };
   }
 
@@ -82,8 +82,16 @@ export class GroupMemberService {
     return false;
   }
 
-  addGroup({ userId, groupId }: { userId: string; groupId: string }) {
-    this.create({ userId, groupId, userStatus: '1' });
+  addGroup({
+    userId,
+    groupId,
+    userStatus = '0'
+  }: {
+    userId: string;
+    groupId: string;
+    userStatus?: string;
+  }) {
+    this.create({ userId, groupId, userStatus });
     return { success: true };
   }
 

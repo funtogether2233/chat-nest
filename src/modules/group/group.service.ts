@@ -36,6 +36,20 @@ export class GroupService {
       throw new NotFoundException(`group #${updateGroupDto.groupId} not found`);
     }
     this.groupRepository.save(newGroup);
+    return { success: true };
+  }
+
+  async disbandGroup({ groupId }: { groupId: string }) {
+    const group = await this.findOne({ groupId });
+    const newGroup = await this.groupRepository.preload({
+      id: group.id,
+      isDisbanded: 1
+    });
+    if (!newGroup) {
+      throw new NotFoundException(`group #${groupId} not found`);
+    }
+    this.groupRepository.save(newGroup);
+    return { success: true };
   }
 
   async searchGroupList({
@@ -53,8 +67,7 @@ export class GroupService {
           groupId: groupInfo.groupId
         });
         return {
-          groupId: groupInfo.groupId,
-          groupName: groupInfo.groupName,
+          ...groupInfo,
           isInGroup
         };
       })
@@ -85,9 +98,10 @@ export class GroupService {
       groupId,
       groupName,
       groupIntroduction: '介绍一下群聊吧~',
-      avatarImg: 'https://img2.imgtp.com/2024/04/20/I2HmK2PR.png'
+      avatarImg: 'https://img2.imgtp.com/2024/04/20/I2HmK2PR.png',
+      isDisbanded: 0
     });
-    this.groupMemberService.addGroup({ userId, groupId });
+    this.groupMemberService.addGroup({ userId, groupId, userStatus: '1' });
     console.log('结束');
     return { success: true };
   }
@@ -107,10 +121,7 @@ export class GroupService {
     const groupList = await this.groupRepository.findBy({
       groupId: Like(`%${groupId}%`)
     });
-    if (groupList.length === 0) {
-      throw new NotFoundException(`group #${groupId} not found`);
-    }
-    return groupList;
+    return groupList.filter((groupInfo) => groupInfo.isDisbanded === 0);
   }
 
   async findOne({ groupId }: { groupId: string }) {

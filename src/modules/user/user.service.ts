@@ -62,8 +62,7 @@ export class UserService {
           groupId
         });
         return {
-          userId: friendshipInfo.userId,
-          userName: friendshipInfo.userName,
+          ...friendshipInfo,
           isFriendship,
           isInGroup
         };
@@ -86,9 +85,6 @@ export class UserService {
     const friendshipList = await this.userRepository.findBy({
       userId: Like(`%${userId}%`)
     });
-    if (friendshipList.length === 0) {
-      throw new NotFoundException(`User #${userId} not found`);
-    }
     return friendshipList;
   }
 
