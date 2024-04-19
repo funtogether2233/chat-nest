@@ -25,7 +25,7 @@ export class FriendshipService {
       friendshipListRes.map(async (friendshipInfo) => {
         const userId = friendshipInfo.friendId;
         const userDetailInfo = await this.userService.findOne({ userId });
-        return { userId: userId, userName: userDetailInfo.userName };
+        return { ...userDetailInfo };
       })
     );
     friendshipList.sort((a, b) => {

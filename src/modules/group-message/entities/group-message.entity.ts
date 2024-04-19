@@ -19,6 +19,6 @@ export class GroupMessage {
   @Column()
   msg: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_time' })
   createdTime: Date;
 }

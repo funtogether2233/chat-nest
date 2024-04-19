@@ -45,7 +45,7 @@ export class GroupService {
     groupId: string;
     userId: string;
   }) {
-    const groupListRes = await this.findAll(groupId);
+    const groupListRes = await this.findAll({ groupId });
     const groupList = await Promise.all(
       groupListRes.map(async (groupInfo) => {
         const isInGroup = await this.groupMemberService.isInGroup({
@@ -102,7 +102,7 @@ export class GroupService {
     return this.groupRepository.save(newGroup);
   }
 
-  async findAll(groupId: string) {
+  async findAll({ groupId }: { groupId: string }) {
     const groupList = await this.groupRepository.findBy({
       groupId: Like(`%${groupId}%`)
     });

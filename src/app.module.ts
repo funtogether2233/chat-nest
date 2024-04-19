@@ -10,6 +10,8 @@ import { FriendshipModule } from './modules/friendship/friendship.module';
 import { GroupMemberModule } from './modules/group-member/group-member.module';
 import { GroupMessageModule } from './modules/group-message/group-message.module';
 import { GroupModule } from './modules/group/group.module';
+import { PostMessageModule } from './modules/post-message/post-message.module';
+import { PostModule } from './modules/post/post.module';
 import { RelationMessageModule } from './modules/relation-message/relation-message.module';
 import { UserAuthModule } from './modules/user-auth/user-auth.module';
 import { UserMessageModule } from './modules/user-message/user-message.module';
@@ -44,6 +46,8 @@ import { UserModule } from './modules/user/user.module';
     GroupModule,
     GroupMemberModule,
     GroupMessageModule,
+    PostModule,
+    PostMessageModule,
     RelationMessageModule,
     CollaDocModule
   ],

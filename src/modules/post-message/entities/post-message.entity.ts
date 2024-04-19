@@ -5,19 +5,19 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm';
 
-@Entity({ name: 'user_message' })
-export class UserMessage {
+@Entity({ name: 'post_message' })
+export class PostMessage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'from_id' })
-  fromId: string;
+  @Column({ name: 'post_id' })
+  postId: string;
 
-  @Column({ name: 'to_id' })
-  toId: string;
+  @Column({ name: 'user_id' })
+  userId: string;
 
   @Column()
-  msg: string;
+  content: string;
 
   @CreateDateColumn({ name: 'created_time' })
   createdTime: Date;
