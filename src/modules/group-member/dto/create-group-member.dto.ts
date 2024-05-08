@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateGroupMemberDto {
   @IsString()
@@ -9,4 +9,7 @@ export class CreateGroupMemberDto {
 
   @IsString()
   userStatus: string;
+
+  @IsNumber()
+  isMute: number;
 }

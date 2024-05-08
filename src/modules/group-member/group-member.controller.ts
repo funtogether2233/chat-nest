@@ -80,4 +80,24 @@ export class GroupMemberController {
   ) {
     return this.groupMemberService.deleteAdmin({ groupId, userId });
   }
+
+  @Public()
+  @Post('get-user-mute')
+  getUserMute(
+    @Body() { userId, groupId }: { userId: string; groupId: string }
+  ) {
+    return this.groupMemberService.getUserMute({ userId, groupId });
+  }
+
+  @Public()
+  @Post('add-mute')
+  addMute(@Body() { groupId, userId }: { groupId: string; userId: string }) {
+    return this.groupMemberService.addMute({ groupId, userId });
+  }
+
+  @Public()
+  @Post('delete-mute')
+  deleteMute(@Body() { groupId, userId }: { groupId: string; userId: string }) {
+    return this.groupMemberService.deleteMute({ groupId, userId });
+  }
 }

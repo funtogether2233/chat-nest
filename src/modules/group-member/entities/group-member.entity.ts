@@ -13,4 +13,10 @@ export class GroupMember {
 
   @Column({ name: 'user_status', default: '0' })
   userStatus: string;
+
+  @Column({
+    name: 'is_mute',
+    default: 0
+  })
+  isMute: number;
 }

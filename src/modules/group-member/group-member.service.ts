@@ -53,7 +53,8 @@ export class GroupMemberService {
         const userId = groupMemberInfo.userId;
         const userDetailInfo = await this.userService.findOne({ userId });
         const userStatus = await this.getUserStatus({ userId, groupId });
-        return { ...userDetailInfo, ...userStatus };
+        const isMute = await this.getUserMute({ userId, groupId });
+        return { ...userDetailInfo, ...userStatus, ...isMute };
       })
     );
     groupMemberList.sort((a, b) => {
@@ -85,13 +86,15 @@ export class GroupMemberService {
   addGroup({
     userId,
     groupId,
-    userStatus = '0'
+    userStatus = '0',
+    isMute = 0
   }: {
     userId: string;
     groupId: string;
     userStatus?: string;
+    isMute?: number;
   }) {
-    this.create({ userId, groupId, userStatus });
+    this.create({ userId, groupId, userStatus, isMute });
     return { success: true };
   }
 
@@ -104,6 +107,11 @@ export class GroupMemberService {
   }) {
     const groupMember = await this.findOne({ userId, groupId });
     return { userStatus: groupMember.userStatus };
+  }
+
+  async getUserMute({ userId, groupId }: { userId: string; groupId: string }) {
+    const groupMember = await this.findOne({ userId, groupId });
+    return { isMute: groupMember.isMute };
   }
 
   async addAdmin({ groupId, userId }: { groupId: string; userId: string }) {
@@ -158,7 +166,32 @@ export class GroupMemberService {
     groupId: string;
     userId: string;
   }) {
-    this.create({ userId, groupId, userStatus: '0' });
+    this.create({ userId, groupId, userStatus: '0', isMute: 0 });
+    return { success: true };
+  }
+
+  async addMute({ groupId, userId }: { groupId: string; userId: string }) {
+    return this.updateMute({ groupId, userId, isMute: 1 });
+  }
+
+  async deleteMute({ groupId, userId }: { groupId: string; userId: string }) {
+    return this.updateMute({ groupId, userId, isMute: 0 });
+  }
+
+  async updateMute({
+    groupId,
+    userId,
+    isMute
+  }: {
+    groupId: string;
+    userId: string;
+    isMute: number;
+  }) {
+    const groupMember = await this.findOne({ userId, groupId });
+    await this.update({
+      id: groupMember.id,
+      updateGroupMemberDto: { isMute }
+    });
     return { success: true };
   }
 
