@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreatePostMessageDto {
   @IsString()
@@ -9,4 +9,7 @@ export class CreatePostMessageDto {
 
   @IsString()
   content: string;
+
+  @IsNumber()
+  isDelete: number;
 }

@@ -10,4 +10,7 @@ export class Friendship {
 
   @Column({ name: 'friend_id' })
   friendId: string;
+
+  @Column({ name: 'post_permission', default: 1 })
+  postPermission: number;
 }

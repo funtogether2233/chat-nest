@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FriendshipService } from '../friendship/friendship.service';
@@ -12,13 +17,16 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @Inject(forwardRef(() => PostMessageService))
     private readonly postMessageService: PostMessageService,
     private readonly userService: UserService,
     private readonly friendshipService: FriendshipService
   ) {}
 
   async getUserPostList({ userId }: { userId: string }) {
-    const postListRes = await this.findAll({ userId });
+    const postListRes = (await this.findAll({ userId })).filter(
+      (post) => post.isDelete === 0
+    );
     const postList = await Promise.all(
       postListRes.map(async (postInfo) => {
         const userInfo = await this.userService.getUserInfo({
@@ -42,7 +50,9 @@ export class PostService {
       await this.friendshipService.getFriendshipList({
         userId
       })
-    ).friendshipList;
+    ).friendshipList.filter(
+      (friendship) => friendship.friendPostPermission === 1
+    );
     const allPostList = (await this.getUserPostList({ userId })).postList;
     for (let i = 0; i < friendList.length; ++i) {
       const friendInfo = friendList[i];
@@ -55,6 +65,11 @@ export class PostService {
         (a, b) => Number(b.createdTime) - Number(a.createdTime)
       )
     };
+  }
+
+  async getPostUserId({ postId }: { postId: string }) {
+    const post = await this.findOneByPostId({ postId });
+    return { postUserId: post.userId };
   }
 
   async getPostDetail({ postId }: { postId: string }) {
@@ -75,9 +90,22 @@ export class PostService {
     };
   }
 
-  async createPost(createPostDto: CreatePostDto) {
-    const post = await this.create(createPostDto);
+  async createPost({ userId, content }: { userId: string; content: string }) {
+    const post = await this.create({ userId, content, isDelete: 0 });
     return { postId: String(post.id), success: true };
+  }
+
+  async deletePost({ postId }: { postId: string }) {
+    const post = await this.findOneByPostId({ postId });
+    const newPost = await this.postRepository.preload({
+      id: post.id,
+      isDelete: 1
+    });
+    if (!newPost) {
+      throw new NotFoundException(`post #${postId} not found`);
+    }
+    this.postRepository.save(newPost);
+    return { success: true };
   }
 
   create(createPostDto: CreatePostDto) {

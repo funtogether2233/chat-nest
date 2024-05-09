@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateFriendshipDto {
   @IsString()
@@ -6,4 +6,7 @@ export class CreateFriendshipDto {
 
   @IsString()
   readonly friendId: string;
+
+  @IsNumber()
+  postPermission: number;
 }

@@ -18,4 +18,7 @@ export class Post {
 
   @CreateDateColumn({ name: 'created_time' })
   createdTime: Date;
+
+  @Column({ name: 'is_delete', default: 0 })
+  isDelete: number;
 }

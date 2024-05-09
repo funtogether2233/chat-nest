@@ -27,4 +27,39 @@ export class FriendshipController {
   ) {
     return this.friendshipService.deleteFriendship({ userId, friendId });
   }
+
+  @Public()
+  @Post('get-user-post-permission')
+  getUserPostPermission(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.getPostPermission({ userId, friendId });
+  }
+
+  @Public()
+  @Post('get-friend-post-permission')
+  getFriendPostPermission(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.getPostPermission({
+      userId: friendId,
+      friendId: userId
+    });
+  }
+
+  @Public()
+  @Post('allow-post-permission')
+  allowPostPermission(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.allowPostPermission({ userId, friendId });
+  }
+
+  @Public()
+  @Post('ban-post-permission')
+  banPostPermission(
+    @Body() { userId, friendId }: { userId: string; friendId: string }
+  ) {
+    return this.friendshipService.banPostPermission({ userId, friendId });
+  }
 }
