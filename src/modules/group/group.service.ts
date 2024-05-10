@@ -102,7 +102,6 @@ export class GroupService {
       isDisbanded: 0
     });
     this.groupMemberService.addGroup({ userId, groupId, userStatus: '1' });
-    console.log('结束');
     return { success: true };
   }
 
