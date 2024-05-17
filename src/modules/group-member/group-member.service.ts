@@ -57,17 +57,33 @@ export class GroupMemberService {
         return { ...userDetailInfo, ...userStatus, ...isMute };
       })
     );
-    groupMemberList.sort((a, b) => {
-      if (a.userName < b.userName) {
-        return -1;
-      }
-      if (a.userName > b.userName) {
-        return 1;
-      }
-      return 0;
-    });
+    const gorupOwner = groupMemberList.filter(
+      (groupMember) => groupMember.userStatus === '1'
+    )[0];
+    const gorupAdminList = groupMemberList
+      .filter((groupMember) => groupMember.userStatus === '2')
+      .sort((a, b) => {
+        if (a.userName < b.userName) {
+          return -1;
+        }
+        if (a.userName > b.userName) {
+          return 1;
+        }
+        return 0;
+      });
+    const gorupMemberList = groupMemberList
+      .filter((groupMember) => groupMember.userStatus === '0')
+      .sort((a, b) => {
+        if (a.userName < b.userName) {
+          return -1;
+        }
+        if (a.userName > b.userName) {
+          return 1;
+        }
+        return 0;
+      });
     return {
-      groupMemberList
+      groupMemberList: [gorupOwner, ...gorupAdminList, ...gorupMemberList]
     };
   }
 

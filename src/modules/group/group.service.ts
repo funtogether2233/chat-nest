@@ -110,7 +110,7 @@ export class GroupService {
       groupId: createGroupDto.groupId
     });
     if (group) {
-      throw new UnauthorizedException(`帐号已存在`);
+      throw new UnauthorizedException(`群组id已存在`);
     }
     const newGroup = this.groupRepository.create(createGroupDto);
     return this.groupRepository.save(newGroup);
